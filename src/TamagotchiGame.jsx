@@ -56,12 +56,14 @@ export default function TamagotchiGame() {
 
     const ageInterval = setInterval(() => {
       setPet((prev) => {
+        if (!prev.alive) return prev; // Stop aging if dead
+
         const newAge = prev.age + 1;
         let newStage = prev.stage;
 
-        if (newAge >= 20 && prev.stage === "egg") newStage = "baby";
+        if (newAge >= 10 && prev.stage === "egg") newStage = "baby";
         else if (newAge >= 40 && prev.stage === "baby") newStage = "child";
-        else if (newAge >= 70 && prev.stage === "child") newStage = "adult";
+        else if (newAge >= 80 && prev.stage === "child") newStage = "adult";
 
         if (newStage !== prev.stage) {
           setMessage(`🎉 ${prev.name} evolved to ${newStage} stage!`);
@@ -143,9 +145,20 @@ export default function TamagotchiGame() {
   const getPetEmoji = () => {
     if (!pet.alive) return "💀";
     if (pet.stage === "egg") return "🥚";
-    if (pet.stage === "baby") return "🐣";
+    if (pet.stage === "baby")
+      return (
+        <video autoPlay loop muted className="w-full h-full object-contain">
+          <source src="/Red-Dragon/baby.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      );
     if (pet.stage === "child") return "🐥";
-    return "🐓";
+    return (
+      <video autoPlay loop muted className="w-full h-full object-contain">
+        <source src="/Red-Dragon/Adult.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    );
   };
 
   const getStatColor = (value) => {
@@ -185,8 +198,14 @@ export default function TamagotchiGame() {
           <div className="text-3xl">{getMood()}</div>
         </div>
 
-        <div className="bg-linear-to-br from-blue-100 to-purple-100 rounded-2xl p-8 mb-4 flex justify-center items-center relative">
-          <div className="text-9xl animate-bounce">{getPetEmoji()}</div>
+        <div className="bg-linear-to-br from-blue-100 to-purple-100 rounded-2xl mb-4 flex justify-center items-center relative overflow-hidden w-full">
+          {typeof getPetEmoji() === "string" ? (
+            <div className="w-48 h-48 flex items-center justify-center text-9xl">
+              {getPetEmoji()}
+            </div>
+          ) : (
+            <div className="w-full h-full max-w-md">{getPetEmoji()}</div>
+          )}
           {!pet.alive && (
             <div className="absolute inset-0 bg-black bg-opacity-50 rounded-2xl flex items-center justify-center">
               <p className="text-white text-xl font-bold">R.I.P</p>

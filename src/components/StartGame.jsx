@@ -1,7 +1,7 @@
 export default function StartGame({ petName, setPetName, onStart }) {
   return (
     <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-purple-400 via-pink-400 to-blue-400">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full">
+      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full mx-8">
         <h1 className="text-4xl font-bold text-center mb-2 text-purple-600">
           Tamagotchi
         </h1>
