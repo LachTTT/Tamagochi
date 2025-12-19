@@ -62,8 +62,8 @@ export default function TamagotchiGame() {
         let newStage = prev.stage;
 
         if (newAge >= 10 && prev.stage === "egg") newStage = "baby";
-        else if (newAge >= 40 && prev.stage === "baby") newStage = "child";
-        else if (newAge >= 80 && prev.stage === "child") newStage = "adult";
+        else if (newAge >= 35 && prev.stage === "baby") newStage = "child";
+        else if (newAge >= 60 && prev.stage === "child") newStage = "adult";
 
         if (newStage !== prev.stage) {
           setMessage(`🎉 ${prev.name} evolved to ${newStage} stage!`);
@@ -71,7 +71,7 @@ export default function TamagotchiGame() {
 
         return { ...prev, age: newAge, stage: newStage };
       });
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(ageInterval);
   }, [gameStarted]);
@@ -144,21 +144,63 @@ export default function TamagotchiGame() {
 
   const getPetEmoji = () => {
     if (!pet.alive) return "💀";
-    if (pet.stage === "egg") return "🥚";
-    if (pet.stage === "baby")
-      return (
-        <video autoPlay loop muted className="w-full h-full object-contain">
-          <source src="/Red-Dragon/baby.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      );
-    if (pet.stage === "child") return "🐥";
-    return (
-      <video autoPlay loop muted className="w-full h-full object-contain">
-        <source src="/Red-Dragon/Adult.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    );
+
+    switch (pet.stage) {
+      case "egg":
+        return (
+          <img
+            key="egg"
+            src="/Red-Dragon/egg.png"
+            alt="Red-Dragon-Egg"
+            className="w-full h-full object-contain"
+          />
+        );
+
+      case "baby":
+        return (
+          <video
+            key="baby"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-contain"
+          >
+            <source src="/Red-Dragon/baby.mp4" type="video/mp4" />
+          </video>
+        );
+
+      case "child":
+        return (
+          <video
+            key="child"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-contain"
+          >
+            <source src="/Red-Dragon/teen.mp4" type="video/mp4" />
+          </video>
+        );
+
+      case "adult":
+        return (
+          <video
+            key="adult"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-contain"
+          >
+            <source src="/Red-Dragon/adult.mp4" type="video/mp4" />
+          </video>
+        );
+
+      default:
+        return "❓";
+    }
   };
 
   const getStatColor = (value) => {
@@ -172,7 +214,7 @@ export default function TamagotchiGame() {
     if (avg > 70) return "😊";
     if (avg > 40) return "😐";
     if (avg > 20) return "😟";
-    return "😢";
+    return "💀";
   };
 
   if (!gameStarted) {
@@ -192,10 +234,10 @@ export default function TamagotchiGame() {
           <div>
             <h2 className="text-2xl font-bold text-purple-600">{pet.name}</h2>
             <p className="text-sm text-gray-600">
-              Age: {pet.age} | Stage: {pet.stage}
+              Day: {pet.age} | Stage: {pet.stage}
             </p>
           </div>
-          <div className="text-3xl">{getMood()}</div>
+          <div className="text-3xl animate-bounce">{getMood()}</div>
         </div>
 
         <div className="bg-linear-to-br from-blue-100 to-purple-100 rounded-2xl mb-4 flex justify-center items-center relative overflow-hidden w-full">
