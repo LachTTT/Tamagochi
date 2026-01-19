@@ -9,6 +9,11 @@ import {
 } from "lucide-react";
 import StartGame from "./components/StartGame";
 
+/* ===========================
+   LOCAL STORAGE KEY
+=========================== */
+const SAVE_KEY = "tamagotchi-save";
+
 export default function TamagotchiGame() {
   const [pet, setPet] = useState({
     name: "",
@@ -22,6 +27,34 @@ export default function TamagotchiGame() {
   const [gameStarted, setGameStarted] = useState(false);
   const [message, setMessage] = useState("");
   const [petName, setPetName] = useState("");
+
+  /* ===========================
+     LOAD GAME FROM STORAGE
+  =========================== */
+  useEffect(() => {
+    const saved = localStorage.getItem(SAVE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setPet(parsed.pet);
+      setGameStarted(parsed.gameStarted);
+      setPetName(parsed.pet?.name || "");
+      setMessage("💾 Game loaded!");
+    }
+  }, []);
+
+  /* ===========================
+     AUTO SAVE GAME
+  =========================== */
+  useEffect(() => {
+    if (!gameStarted) return;
+    localStorage.setItem(
+      SAVE_KEY,
+      JSON.stringify({
+        pet,
+        gameStarted,
+      }),
+    );
+  }, [pet, gameStarted]);
 
   useEffect(() => {
     if (!gameStarted || !pet.alive) return;
@@ -56,7 +89,7 @@ export default function TamagotchiGame() {
 
     const ageInterval = setInterval(() => {
       setPet((prev) => {
-        if (!prev.alive) return prev; // Stop aging if dead
+        if (!prev.alive) return prev;
 
         const newAge = prev.age + 1;
         let newStage = prev.stage;
@@ -128,6 +161,7 @@ export default function TamagotchiGame() {
   };
 
   const reset = () => {
+    localStorage.removeItem(SAVE_KEY);
     setPet({
       name: "",
       hunger: 80,
@@ -149,17 +183,14 @@ export default function TamagotchiGame() {
       case "egg":
         return (
           <img
-            key="egg"
             src="/Red-Dragon/egg.png"
             alt="Red-Dragon-Egg"
             className="w-full h-full object-contain"
           />
         );
-
       case "baby":
         return (
           <video
-            key="baby"
             autoPlay
             loop
             muted
@@ -169,11 +200,9 @@ export default function TamagotchiGame() {
             <source src="/Red-Dragon/baby.mp4" type="video/mp4" />
           </video>
         );
-
       case "child":
         return (
           <video
-            key="child"
             autoPlay
             loop
             muted
@@ -183,11 +212,9 @@ export default function TamagotchiGame() {
             <source src="/Red-Dragon/teen.mp4" type="video/mp4" />
           </video>
         );
-
       case "adult":
         return (
           <video
-            key="adult"
             autoPlay
             loop
             muted
@@ -197,7 +224,6 @@ export default function TamagotchiGame() {
             <source src="/Red-Dragon/adult.mp4" type="video/mp4" />
           </video>
         );
-
       default:
         return "❓";
     }
@@ -272,7 +298,7 @@ export default function TamagotchiGame() {
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
                 className={`h-3 rounded-full transition-all ${getStatColor(
-                  pet.hunger
+                  pet.hunger,
                 )}`}
                 style={{ width: `${pet.hunger}%` }}
               />
@@ -289,7 +315,7 @@ export default function TamagotchiGame() {
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
                 className={`h-3 rounded-full transition-all ${getStatColor(
-                  pet.happiness
+                  pet.happiness,
                 )}`}
                 style={{ width: `${pet.happiness}%` }}
               />
@@ -306,7 +332,7 @@ export default function TamagotchiGame() {
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
                 className={`h-3 rounded-full transition-all ${getStatColor(
-                  pet.energy
+                  pet.energy,
                 )}`}
                 style={{ width: `${pet.energy}%` }}
               />
