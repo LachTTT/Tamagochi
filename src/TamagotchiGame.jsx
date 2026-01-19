@@ -104,7 +104,7 @@ export default function TamagotchiGame() {
 
         return { ...prev, age: newAge, stage: newStage };
       });
-    }, 1000);
+    }, 10000);
 
     return () => clearInterval(ageInterval);
   }, [gameStarted]);
