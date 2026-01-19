@@ -104,7 +104,7 @@ export default function TamagotchiGame() {
 
         return { ...prev, age: newAge, stage: newStage };
       });
-    }, 10000);
+    }, 1000);
 
     return () => clearInterval(ageInterval);
   }, [gameStarted]);
@@ -183,14 +183,17 @@ export default function TamagotchiGame() {
       case "egg":
         return (
           <img
+            key="egg"
             src="/Red-Dragon/egg.png"
             alt="Red-Dragon-Egg"
             className="w-full h-full object-contain"
           />
         );
+
       case "baby":
         return (
           <video
+            key="baby"
             autoPlay
             loop
             muted
@@ -200,9 +203,11 @@ export default function TamagotchiGame() {
             <source src="/Red-Dragon/baby.mp4" type="video/mp4" />
           </video>
         );
+
       case "child":
         return (
           <video
+            key="child"
             autoPlay
             loop
             muted
@@ -212,9 +217,11 @@ export default function TamagotchiGame() {
             <source src="/Red-Dragon/teen.mp4" type="video/mp4" />
           </video>
         );
+
       case "adult":
         return (
           <video
+            key="adult"
             autoPlay
             loop
             muted
@@ -224,6 +231,7 @@ export default function TamagotchiGame() {
             <source src="/Red-Dragon/adult.mp4" type="video/mp4" />
           </video>
         );
+
       default:
         return "❓";
     }
